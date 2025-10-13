@@ -1,4 +1,4 @@
-name: CI Workflow
+name: CI
 
 on:
   push:
@@ -9,23 +9,25 @@ on:
       - main
 
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Environment
-        run: |
-          # Тут можно установить необходимые зависимости, если нужно
-          # например, для Python: sudo apt-get install -y python3
-          
-      - name: Make setup
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Make
+        run: sudo apt-get update && sudo apt-get install -y make
+
+      - name: Setup project
         run: make setup
 
       - name: Run tests
         run: make test
 
-      - name: Run linters
+      - name: Run linter
         run: make lint
